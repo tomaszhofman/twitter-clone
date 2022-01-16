@@ -9,14 +9,12 @@
     "plugin:react/recommended",
     "plugin:react-hooks/recommended",
     "plugin:jsx-a11y/strict",
-    "plugin:testing-library/recommended",
     "plugin:jest-dom/recommended",
     "next",
     "next/core-web-vitals"
   ],
   "plugins": [
     "jsx-a11y",
-    "react-app",
     "react-hooks",
     "jest-dom",
     "testing-library",
@@ -31,8 +29,17 @@
   },
   "rules": {
   },
-  "parserOptions": {
-    "ecmaVersion": 12,
-    "sourceType": "module"
-  }
+  "overrides": [
+    {
+      "files": [
+        "*.ts",
+        "*.tsx"
+      ],
+      "parserOptions": {
+        "project": [
+          "tsconfig.json"
+        ]
+      }
+    }
+  ]
 }
