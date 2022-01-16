@@ -1,0 +1,7 @@
+dist
+node_modules
+coverage
+.next
+build
+tailwind.config.js
+postcss.config.js
