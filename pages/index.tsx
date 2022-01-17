@@ -12,7 +12,7 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="bg-black min-h-screen mx-auto my-0 max-w-screen-2xl">
+      <main className="bg-black min-h-screen mx-auto my-0 max-w-screen-xl">
         <Sidebar />
         {/*<Feed/>*/}
         {/*<Modal/>*/}

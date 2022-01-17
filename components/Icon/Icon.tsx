@@ -8,6 +8,7 @@ import Messages from '@/assets/icons/messages.svg';
 import Notification from '@/assets/icons/notification.svg';
 import Profile from '@/assets/icons/profile.svg';
 import More from '@/assets/icons/more.svg';
+import DotsMenu from '@/assets/icons/dotsMenu.svg';
 
 const iconTypes = {
   home: Home,
@@ -18,6 +19,7 @@ const iconTypes = {
   notification: Notification,
   profile: Profile,
   more: More,
+  dotsMenu: DotsMenu,
 };
 
 function Icon({ name, ...props }: Props) {

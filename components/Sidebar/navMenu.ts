@@ -10,7 +10,7 @@ export const NAV_MENU: Array<NavMenu> = [
     href: '/home',
   },
   {
-    text: 'Notification',
+    text: 'Notifications',
     icon: 'notification',
     href: '/home',
   },
