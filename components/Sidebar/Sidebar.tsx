@@ -30,10 +30,12 @@ function Sidebar() {
       </button>
 
       <div className=" text-white flex items-center justify-center mt-auto hoverAnimation xl:ml-auto xl:-mr-5 w-56">
-        <img
+        <Image
           src="https://pbs.twimg.com/profile_images/1467773673058750468/X-7z8YWX_x96.png"
           alt=""
-          className="h-10 w-10 rounded-full xl:mr-2.5"
+          width={100}
+          height={100}
+          className="rounded-full xl:mr-2.5"
         />
         <div className="hidden xl:inline leading-5">
           <h4 className="font-bold">Tomasz</h4>
