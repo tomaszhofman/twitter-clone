@@ -8,4 +8,9 @@ export enum IconTypesEnum {
   Profile = 'profile',
   More = 'more',
   dotsMenu = 'dotsMenu',
+  TimelineOptions = 'timelineOptions',
+  Emoji = 'emoji',
+  Gif = 'gif',
+  UploadImg = 'uploadImg',
+  Survey = 'survey',
 }
