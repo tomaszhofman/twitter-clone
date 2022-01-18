@@ -2,6 +2,7 @@ import type { NextPage } from 'next';
 import Head from 'next/head';
 import styles from '../styles/Home.module.css';
 import { Sidebar } from '@/components/Sidebar';
+import { Feed } from '@/components/Feed/Feed';
 
 const Home: NextPage = () => {
   return (
@@ -12,9 +13,9 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="bg-black min-h-screen mx-auto my-0 max-w-screen-xl">
+      <main className="flex bg-black min-h-screen mx-auto my-0 max-w-screen-xl ">
         <Sidebar />
-        {/*<Feed/>*/}
+        <Feed />
         {/*<Modal/>*/}
       </main>
     </div>

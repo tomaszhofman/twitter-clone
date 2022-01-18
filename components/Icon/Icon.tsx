@@ -9,6 +9,7 @@ import Notification from '@/assets/icons/notification.svg';
 import Profile from '@/assets/icons/profile.svg';
 import More from '@/assets/icons/more.svg';
 import DotsMenu from '@/assets/icons/dotsMenu.svg';
+import TimelineOptions from '@/assets/icons/timline-options.svg';
 
 const iconTypes = {
   home: Home,
@@ -20,6 +21,7 @@ const iconTypes = {
   profile: Profile,
   more: More,
   dotsMenu: DotsMenu,
+  timelineOptions: TimelineOptions,
 };
 
 function Icon({ name, ...props }: Props) {
