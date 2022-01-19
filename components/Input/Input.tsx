@@ -2,7 +2,7 @@ import React, { ChangeEvent, useRef, useState } from 'react';
 import Image from 'next/image';
 import { Icon } from '@/components/Icon';
 import { IconTypesEnum } from '../../types/iconsTypes';
-import { Picker } from 'emoji-mart';
+import { BaseEmoji, Picker } from 'emoji-mart';
 import 'emoji-mart/css/emoji-mart.css';
 import { addDoc, collection, doc, updateDoc } from '@firebase/firestore';
 import { firestore, storage } from '../../firebase';
@@ -38,7 +38,7 @@ function Input() {
     };
   };
 
-  const addEmojiHandler = (e: { unified: string }) => {
+  const addEmojiHandler = (e: BaseEmoji) => {
     let sym = e.unified.split('-');
     let codesArray = [];
     sym.forEach((el) => codesArray.push('0x' + el));
@@ -49,12 +49,10 @@ function Input() {
   //API HANDLERS
   const sendPostHandler = async () => {
     const postsRef = collection(firestore, 'posts');
-
     const collectionSnap = await addDoc(postsRef, {
       text: inputValue,
       timestamp: serverTimestamp(),
     });
-
     const storageImageRef = ref(storage, `posts/${collectionSnap.id}/image`);
     if (selectImage) {
       await uploadString(storageImageRef, String(selectImage), 'data_url');
