@@ -9,6 +9,7 @@
     "prepare": "husky install"
   },
   "dependencies": {
+    "@firebase/database": "^0.12.5",
     "@firebase/firestore": "^3.4.3",
     "@firebase/storage": "^0.9.1",
     "emoji-mart": "^3.0.1",
@@ -19,6 +20,7 @@
   },
   "devDependencies": {
     "@svgr/webpack": "^6.2.0",
+    "@types/emoji-mart": "^3.0.9",
     "@types/node": "17.0.8",
     "@types/react": "17.0.38",
     "@typescript-eslint/parser": "^5.9.1",

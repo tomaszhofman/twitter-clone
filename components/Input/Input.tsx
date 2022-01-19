@@ -4,11 +4,10 @@ import { Icon } from '@/components/Icon';
 import { IconTypesEnum } from '../../types/iconsTypes';
 import { Picker } from 'emoji-mart';
 import 'emoji-mart/css/emoji-mart.css';
-
-// import { addDoc, collection } from '@firebase/firestore';
-// import { firestore, storage } from '../../firebase';
-// import { serverTimestamp } from '@firebase/database';
-// import { ref, uploadString } from '@firebase/storage';
+import { addDoc, collection, doc, updateDoc } from '@firebase/firestore';
+import { firestore, storage } from '../../firebase';
+import { serverTimestamp } from '@firebase/database';
+import { getDownloadURL, ref, uploadString } from '@firebase/storage';
 
 function Input() {
   const [inputValue, setInputValue] = useState('');
@@ -49,15 +48,19 @@ function Input() {
 
   //API HANDLERS
   const sendPostHandler = async () => {
-    // const postsRef = collection(firestore, 'posts');
-    // const collectionSnap = await addDoc(postsRef, {
-    //   text: inputValue,
-    //   timestamp: serverTimestamp(),
-    // });
-    // const spaceRef = ref(storage, `posts/${collectionSnap.id}/image`);
-    // if (selectImage) {
-    //   const uploadImage = await uploadString(spaceRef, selectImage, 'data_url');
-    // }
+    const postsRef = collection(firestore, 'posts');
+
+    const collectionSnap = await addDoc(postsRef, {
+      text: inputValue,
+      timestamp: serverTimestamp(),
+    });
+
+    const storageImageRef = ref(storage, `posts/${collectionSnap.id}/image`);
+    if (selectImage) {
+      await uploadString(storageImageRef, String(selectImage), 'data_url');
+      const downloadedUrl = await getDownloadURL(storageImageRef);
+      await updateDoc(doc(firestore, 'posts', collectionSnap.id), { image: downloadedUrl });
+    }
   };
 
   return (
