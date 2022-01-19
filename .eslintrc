@@ -29,7 +29,8 @@
     "node": true
   },
   "rules": {
-    "import/no-unresolved": "error"
+    "import/no-unresolved": "error",
+    "@next/next/no-img-element": "off"
   },
   "settings": {
     "import/parsers": {

@@ -5,19 +5,39 @@ import { IconTypesEnum } from '../../types/iconsTypes';
 import { Picker } from 'emoji-mart';
 import 'emoji-mart/css/emoji-mart.css';
 
+// import { addDoc, collection } from '@firebase/firestore';
+// import { firestore, storage } from '../../firebase';
+// import { serverTimestamp } from '@firebase/database';
+// import { ref, uploadString } from '@firebase/storage';
+
 function Input() {
   const [inputValue, setInputValue] = useState('');
-  const [selectImage] = useState('');
+  const [selectImage, setSelectImage] = useState<string | ArrayBuffer>('');
   const [showEmoji, setShowEmoji] = useState(false);
+  const [imageDimensions, setImageDimensions] = useState<ImageDimensions>({ height: 0, width: 0 });
   const filePickerRef = useRef(null);
+  const imageRef = useRef(null);
 
   const onChangeHandler = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setInputValue(e.target.value);
   };
 
-  const addImageToPostHandler = () => {};
+  const onImgLoadHandler = () => {
+    setImageDimensions({
+      height: imageRef.current.height,
+      width: imageRef.current.width,
+    });
+  };
 
-  const sendPostHandler = () => {};
+  const addImageToPostHandler = (e: ChangeEvent<HTMLInputElement> & { files: FileList }) => {
+    const [file] = Array.from(e.target.files);
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = (progressEvent) => {
+      // loadImage(setImageDimensions, progressEvent.target.result);
+      setSelectImage(progressEvent.target.result);
+    };
+  };
 
   const addEmojiHandler = (e: { unified: string }) => {
     let sym = e.unified.split('-');
@@ -27,8 +47,21 @@ function Input() {
     setInputValue(inputValue + emoji);
   };
 
+  //API HANDLERS
+  const sendPostHandler = async () => {
+    // const postsRef = collection(firestore, 'posts');
+    // const collectionSnap = await addDoc(postsRef, {
+    //   text: inputValue,
+    //   timestamp: serverTimestamp(),
+    // });
+    // const spaceRef = ref(storage, `posts/${collectionSnap.id}/image`);
+    // if (selectImage) {
+    //   const uploadImage = await uploadString(spaceRef, selectImage, 'data_url');
+    // }
+  };
+
   return (
-    <div className="w-full border-b border-[#2F3336] p-3 flex space-x-3 overflow-y-scroll items-center">
+    <div className="w-full border-b border-[#2F3336] p-3 flex space-x-3 overflow-y-scroll items-start">
       <div>
         <Image
           src="https://pbs.twimg.com/profile_images/1467773673058750468/X-7z8YWX_x96.png"
@@ -49,6 +82,23 @@ function Input() {
             id="tweet"
           />
         </div>
+
+        {Boolean(selectImage) && (
+          <div className="relative">
+            <div
+              className={`h-[${imageDimensions.height}px] max-w-full
+             object-contain`}
+            >
+              <img
+                src={String(selectImage)}
+                className="rounded-2xl h-full w-full"
+                alt={''}
+                ref={imageRef}
+                onLoad={onImgLoadHandler}
+              />
+            </div>
+          </div>
+        )}
         <div className="flex items-center justify-between pt-2.5">
           <div className="flex items-center ">
             <div className="icon">
@@ -61,7 +111,6 @@ function Input() {
                 type="file"
                 className="hidden"
                 onChange={addImageToPostHandler}
-                value={selectImage}
                 ref={filePickerRef}
               />
             </div>
@@ -107,3 +156,8 @@ function Input() {
 }
 
 export { Input };
+
+type ImageDimensions = {
+  width: number;
+  height: number;
+};
