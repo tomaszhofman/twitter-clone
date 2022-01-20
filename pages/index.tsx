@@ -2,6 +2,7 @@ import type { NextPage } from 'next';
 import Head from 'next/head';
 import { Sidebar } from '@/components/Sidebar';
 import { Feed } from '@/components/Feed/Feed';
+// import { getProviders } from 'next-auth/react';
 
 const Home: NextPage = () => {
   return (
@@ -20,5 +21,12 @@ const Home: NextPage = () => {
     </div>
   );
 };
+
+// export async function getServerSideProps() {
+//   const providers = await getProviders();
+//   return {
+//     props: {},
+//   };
+// }
 
 export default Home;
