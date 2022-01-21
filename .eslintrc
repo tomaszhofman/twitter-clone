@@ -30,7 +30,8 @@
   },
   "rules": {
     "import/no-unresolved": "error",
-    "@next/next/no-img-element": "off"
+    "@next/next/no-img-element": "off",
+    "no-console": "warn"
   },
   "settings": {
     "import/parsers": {

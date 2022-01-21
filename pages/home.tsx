@@ -1,10 +1,10 @@
-import { GetServerSidePropsContext, NextPage } from 'next';
+import { GetServerSidePropsContext } from 'next';
 import { getSession } from 'next-auth/react';
 import Head from 'next/head';
 import { Sidebar } from '@/components/Sidebar';
 import { Feed } from '@/components/Feed';
 
-const Home: NextPage = () => {
+const Home = (props) => {
   return (
     <div>
       <Head>
@@ -14,7 +14,7 @@ const Home: NextPage = () => {
       </Head>
 
       <main className="flex bg-black min-h-screen mx-auto my-0 max-w-screen-xl ">
-        <Sidebar />
+        <Sidebar profileDetails={props.profile} />
         <Feed />
         {/*<Modal/>*/}
       </main>
@@ -28,11 +28,17 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   if (!session?.user) {
     return { redirect: { permanent: false, destination: '/login' } };
+  } else {
+    return {
+      props: {
+        profile: {
+          username: session.user.name,
+          tag: session.user.tag,
+          id: session.user.id,
+        },
+      },
+    };
   }
-
-  return {
-    props: {},
-  };
 }
 
 export default Home;

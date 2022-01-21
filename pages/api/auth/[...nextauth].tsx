@@ -1,4 +1,4 @@
-import NextAuth from 'next-auth';
+import NextAuth, { Session } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 
 export default NextAuth({
@@ -10,7 +10,7 @@ export default NextAuth({
   ],
   callbacks: {
     async session({ session, token }) {
-      return {
+      const twitterSession: Session = {
         ...session,
         user: {
           ...session.user,
@@ -18,6 +18,7 @@ export default NextAuth({
           id: token.sub,
         },
       };
+      return twitterSession;
     },
   },
 });

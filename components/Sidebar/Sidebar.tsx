@@ -4,8 +4,9 @@ import { NAV_MENU } from '@/components/Sidebar/navMenu';
 import { useRouter } from 'next/router';
 import { Icon } from '@/components/Icon';
 
-function Sidebar() {
+function Sidebar({ profileDetails }) {
   const router = useRouter();
+  const { username, tag } = profileDetails;
 
   return (
     <div className="hidden sm:flex min-w-[88px] xl:w-[275px] border-r border-[#2F3336] ">
@@ -48,8 +49,8 @@ function Sidebar() {
                 className="rounded-full "
               />
               <div className="hidden xl:inline leading-5 xl:ml-2.5">
-                <h5 className="font-bold text-base text-[#D9D9D9]">Tomasz</h5>
-                <p className="text-[#6E767D] font-medium text-sm">@tijoij</p>
+                <h5 className="font-bold text-base text-[#D9D9D9]">{username}</h5>
+                <p className="text-[#6E767D] font-medium text-sm">@{tag}</p>
               </div>
             </div>
             <Icon name="dotsMenu" className="hidden h-5 xl:inline ml-10 fill-white" />
