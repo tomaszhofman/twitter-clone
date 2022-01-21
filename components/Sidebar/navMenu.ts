@@ -2,42 +2,42 @@ export const NAV_MENU: Array<NavMenu> = [
   {
     text: 'Home',
     icon: 'home',
-    href: '/',
+    href: '/home',
   },
   {
     text: 'Explore',
     icon: 'explore',
-    href: '/home',
+    href: '/explore',
   },
   {
     text: 'Notifications',
     icon: 'notification',
-    href: '/home',
+    href: '/notification',
   },
   {
     text: 'Messages',
     icon: 'messages',
-    href: '/home',
+    href: '/messages',
   },
   {
     text: 'Bookmarks',
     icon: 'bookmarks',
-    href: '/home',
+    href: '/bookmarks',
   },
   {
     text: 'List',
     icon: 'lists',
-    href: '/home',
+    href: '/lists',
   },
   {
     text: 'Profile',
     icon: 'profile',
-    href: '/home',
+    href: '/profile',
   },
   {
     text: 'More',
     icon: 'more',
-    href: '/home',
+    href: '/more',
   },
 ];
 
