@@ -1,10 +1,14 @@
-import { GetServerSidePropsContext } from 'next';
+import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { getSession } from 'next-auth/react';
 import Head from 'next/head';
 import { Sidebar } from '@/components/Sidebar';
 import { Feed } from '@/components/Feed';
+import { collectionGroup, getDocs, limit, orderBy, query } from '@firebase/firestore';
+import { firestore } from '../firebase';
+import { postToJSON } from '../lib/postToJSON';
 
-const Home = (props) => {
+const Home = (props: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+  console.log(props);
   return (
     <div>
       <Head>
@@ -15,7 +19,7 @@ const Home = (props) => {
 
       <main className="flex bg-black min-h-screen mx-auto my-0 max-w-screen-xl ">
         <Sidebar profileDetails={props.profile} />
-        <Feed />
+        <Feed posts={props.posts} />
         {/*<Modal/>*/}
       </main>
     </div>
@@ -25,6 +29,11 @@ const Home = (props) => {
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { req } = context;
   const session = await getSession({ req });
+
+  const collectionRef = collectionGroup(firestore, 'posts');
+  const postsQuery = query(collectionRef, orderBy('createdAt', 'desc'), limit(8));
+  const postsDocs = await getDocs(postsQuery);
+  const posts = postsDocs.docs.map(postToJSON);
 
   if (!session?.user) {
     return { redirect: { permanent: false, destination: '/login' } };
@@ -36,6 +45,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
           tag: session.user.tag,
           id: session.user.id,
         },
+        posts,
       },
     };
   }

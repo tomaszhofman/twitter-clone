@@ -4,12 +4,13 @@ import { Icon } from '@/components/Icon';
 import { IconTypesEnum } from '../../types/iconsTypes';
 import { BaseEmoji, Picker } from 'emoji-mart';
 import 'emoji-mart/css/emoji-mart.css';
-import { addDoc, collection, doc, updateDoc } from '@firebase/firestore';
+import { addDoc, collection, doc, updateDoc, Timestamp } from '@firebase/firestore';
 import { firestore, storage } from '../../firebase';
-import { serverTimestamp } from '@firebase/database';
 import { getDownloadURL, ref, uploadString } from '@firebase/storage';
+import { useSession } from 'next-auth/react';
 
 function Input() {
+  const { data: { user } = { user: null } } = useSession();
   const [inputValue, setInputValue] = useState('');
   const [selectImage, setSelectImage] = useState<string | ArrayBuffer>('');
   const [showEmoji, setShowEmoji] = useState(false);
@@ -50,8 +51,13 @@ function Input() {
   const sendPostHandler = async () => {
     const postsRef = collection(firestore, 'posts');
     const collectionSnap = await addDoc(postsRef, {
+      id: user.id,
+      userImage: user.image,
+      name: user.name,
+      tag: user.tag,
       text: inputValue,
-      timestamp: serverTimestamp(),
+      createdAt: Timestamp.now(),
+      updatedAt: Timestamp.now(),
     });
     const storageImageRef = ref(storage, `posts/${collectionSnap.id}/image`);
     if (selectImage) {
