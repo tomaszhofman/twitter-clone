@@ -8,6 +8,11 @@ import { getDownloadURL, ref, uploadString } from '@firebase/storage';
 import { useSession } from 'next-auth/react';
 import { emojiIcon, gifIcon, mediaIcon, surveyIcon } from '@/components/Icons';
 
+type ImageDimensions = {
+  width: number;
+  height: number;
+};
+
 function Input() {
   const { data: { user } = { user: null } } = useSession();
   const [inputValue, setInputValue] = useState('');
@@ -107,18 +112,18 @@ function Input() {
         )}
         <div className="flex items-center justify-between pt-2.5">
           <div className="flex items-center ">
-            <div className="icon">
+            <div>
               <div
                 tabIndex={0}
                 role="button"
                 aria-label="add photos or video"
                 onClick={() => filePickerRef.current.click()}
                 onKeyDown={() => filePickerRef.current.click()}
-                className="h-22 "
+                className="relative mr-[10px] "
               >
                 {mediaIcon}
+                <span className="icon" />
               </div>
-
               <input
                 type="file"
                 className="hidden"
@@ -126,19 +131,25 @@ function Input() {
                 ref={filePickerRef}
               />
             </div>
-            <div className="icon">{gifIcon}</div>
-            <div className="icon">{surveyIcon}</div>
+            <div className="relative h-full  mx-[10px] ">
+              {gifIcon}
+              <span className="icon" />
+            </div>
+            <div className="relative h-full  mx-[10px] ">
+              {surveyIcon}
+              <span className="icon" />
+            </div>
             <div
               onClick={() => setShowEmoji(!showEmoji)}
               onKeyDown={() => setShowEmoji(!showEmoji)}
-              className=" icon "
               role="button"
               tabIndex={0}
               aria-label="add emoji"
+              className="relative h-full mx-[10px]"
             >
               {emojiIcon}
+              <span className="icon" />
             </div>
-
             {showEmoji && (
               <Picker
                 onSelect={addEmojiHandler}
@@ -167,8 +178,3 @@ function Input() {
 }
 
 export { Input };
-
-type ImageDimensions = {
-  width: number;
-  height: number;
-};
