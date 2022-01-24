@@ -32,14 +32,14 @@ function Posts({ posts }: Props) {
             <div className="flex pb-[10px] flex-col  w-full">
               <div>
                 <div className="flex items-center gap-[5px] ">
-                  <div className="font-bold text-sm text-white"> {post.name}</div>
+                  <div className="font-bold text-sm text-gray-primary"> {post.name}</div>
                   <div className="text-sm text-[#6E767D]">@{post.tag}</div>
                   <div className="text-[#6E767D]">&#183;</div>
                   <div className="text-sm text-[#6E767D]">
                     {timeFromNowFormater(post.createdAt)}
                   </div>
                 </div>
-                <div className="text-white text-sm">{post.text}</div>
+                <div className="text-gray-primary text-sm">{post.text}</div>
               </div>
               <div className="flex w-full items-center justify-between mt-2">
                 <div className="flex items-center">
