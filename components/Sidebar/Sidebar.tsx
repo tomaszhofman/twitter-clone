@@ -1,8 +1,81 @@
 import Image from 'next/image';
 import { SidebarLink } from '@/components/Sidebar/SidebarLink';
-import { NAV_MENU } from '@/components/Sidebar/navMenu';
 import { useRouter } from 'next/router';
-import { Icon } from '@/components/Icon';
+import {
+  arrowButtonIcon,
+  bookmarkIconOutline,
+  bookmarkIconSolid,
+  exploreIconOutline,
+  exploreIconSolid,
+  homeIconOutline,
+  homeIconSolid,
+  listsIconOutline,
+  listsIconSolid,
+  menuIconOutline,
+  messagesIconOutline,
+  messagesIconSolid,
+  notificationIconOutline,
+  notificationIconSolid,
+  profileIconOutline,
+  profileIconSolid,
+} from '@/components/Icons';
+
+type NavMenu = {
+  text: string;
+  icon: React.ReactNode;
+  activeIcon?: React.ReactNode;
+  href: string;
+};
+
+export const NAV_MENU: Array<NavMenu> = [
+  {
+    text: 'Home',
+    icon: homeIconOutline,
+    activeIcon: homeIconSolid,
+    href: '/home',
+  },
+  {
+    text: 'Explore',
+    icon: exploreIconOutline,
+    activeIcon: exploreIconSolid,
+    href: '/explore',
+  },
+  {
+    text: 'Notifications',
+    icon: notificationIconOutline,
+    activeIcon: notificationIconSolid,
+    href: '/notification',
+  },
+  {
+    text: 'Messages',
+    icon: messagesIconOutline,
+    activeIcon: messagesIconSolid,
+    href: '/messages',
+  },
+  {
+    text: 'Bookmarks',
+    icon: bookmarkIconOutline,
+    activeIcon: bookmarkIconSolid,
+    href: '/bookmarks',
+  },
+  {
+    text: 'List',
+    icon: listsIconOutline,
+    activeIcon: listsIconSolid,
+    href: '/lists',
+  },
+  {
+    text: 'Profile',
+    icon: profileIconOutline,
+    activeIcon: profileIconSolid,
+    href: '/profile',
+  },
+  {
+    text: 'More',
+    icon: menuIconOutline,
+    href: '/more',
+  },
+];
 
 function Sidebar({ profileDetails }) {
   const router = useRouter();
@@ -21,19 +94,12 @@ function Sidebar({ profileDetails }) {
                 height={30}
               />
             </div>
-            <div className="space-y-2.5 mt-4 mb-2.5">
+            <ul className="space-y-2.5 mt-4 mb-2.5">
               {NAV_MENU.map((navEl) => {
                 const isCurrent = router.asPath === navEl.href;
-                return (
-                  <SidebarLink
-                    key={navEl.text}
-                    text={navEl.text}
-                    icon={navEl.icon}
-                    active={isCurrent}
-                  />
-                );
+                return <SidebarLink key={navEl.href} active={isCurrent} {...navEl} />;
               })}
-            </div>
+            </ul>
             <button className="hidden xl:inline bg-[#1d9bf0] text-white rounded-full w-56 h-[52px] text-lg font-bold shadow-md hover:bg-[#1a8cd8] mt-[12px]">
               Tweet
             </button>
@@ -53,7 +119,8 @@ function Sidebar({ profileDetails }) {
                 <p className="text-[#6E767D] font-medium text-sm">@{tag}</p>
               </div>
             </div>
-            <Icon name="dotsMenu" className="hidden h-5 xl:inline ml-10 fill-white" />
+            <div className="hidden h-5 xl:inline ml-10 fill-white"></div>
+            {arrowButtonIcon}
           </div>
         </div>
       </div>

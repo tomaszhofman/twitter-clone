@@ -1,13 +1,12 @@
 import React, { ChangeEvent, useRef, useState } from 'react';
 import Image from 'next/image';
-import { Icon } from '@/components/Icon';
-import { IconTypesEnum } from '../../types/iconsTypes';
 import { BaseEmoji, Picker } from 'emoji-mart';
 import 'emoji-mart/css/emoji-mart.css';
 import { addDoc, collection, doc, updateDoc, Timestamp } from '@firebase/firestore';
 import { firestore, storage } from '../../firebase';
 import { getDownloadURL, ref, uploadString } from '@firebase/storage';
 import { useSession } from 'next-auth/react';
+import { emojiIcon, gifIcon, mediaIcon, surveyIcon } from '@/components/Icons';
 
 function Input() {
   const { data: { user } = { user: null } } = useSession();
@@ -109,11 +108,17 @@ function Input() {
         <div className="flex items-center justify-between pt-2.5">
           <div className="flex items-center ">
             <div className="icon">
-              <Icon
+              <div
+                tabIndex={0}
+                role="button"
+                aria-label="add photos or video"
                 onClick={() => filePickerRef.current.click()}
-                name="uploadImg"
+                onKeyDown={() => filePickerRef.current.click()}
                 className="h-22 "
-              />
+              >
+                {mediaIcon}
+              </div>
+
               <input
                 type="file"
                 className="hidden"
@@ -121,18 +126,17 @@ function Input() {
                 ref={filePickerRef}
               />
             </div>
-            <div className="icon">
-              <Icon name={IconTypesEnum.Gif} className="h-22 " />
-            </div>
-            <div className="icon">
-              <Icon name={IconTypesEnum.Survey} className="h-22 " />
-            </div>
-            <div className="icon">
-              <Icon
-                onClick={() => setShowEmoji(!showEmoji)}
-                name={IconTypesEnum.Emoji}
-                className="h-22 "
-              />
+            <div className="icon">{gifIcon}</div>
+            <div className="icon">{surveyIcon}</div>
+            <div
+              onClick={() => setShowEmoji(!showEmoji)}
+              onKeyDown={() => setShowEmoji(!showEmoji)}
+              className=" icon "
+              role="button"
+              tabIndex={0}
+              aria-label="add emoji"
+            >
+              {emojiIcon}
             </div>
 
             {showEmoji && (
