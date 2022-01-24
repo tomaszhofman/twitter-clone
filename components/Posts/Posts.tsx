@@ -2,6 +2,7 @@ import React from 'react';
 import firebase from 'firebase/compat';
 import DocumentData = firebase.firestore.DocumentData;
 import { timeFromNowFormater } from '../../lib/timeFromNowFormater';
+import Image from 'next/image';
 
 function Posts({ posts }: Props) {
   return (
@@ -13,11 +14,15 @@ function Posts({ posts }: Props) {
         >
           <div className="flex items-start w-full h-full ">
             <div className="mr-2">
-              <img
-                className="rounded-full h-[3.063rem]"
-                src={post.userImage}
-                alt={`${post.name}`}
-              />
+              <div className="relative h-[3.063rem] w-[3.063rem]">
+                <Image
+                  src={post.userImage}
+                  layout="fill"
+                  objectFit="cover"
+                  className="absolute rounded-full "
+                  alt={post.name}
+                />
+              </div>
             </div>
             <div>
               <div className="flex items-center gap-[5px]  ">

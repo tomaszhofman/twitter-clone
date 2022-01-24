@@ -8,7 +8,6 @@ import { firestore } from '../firebase';
 import { postToJSON } from '../lib/postToJSON';
 
 const Home = (props: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  console.log(props);
   return (
     <div>
       <Head>
