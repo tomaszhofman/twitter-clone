@@ -3,11 +3,10 @@ import { timeFromNowFormater } from '../../lib/timeFromNowFormater';
 import { likeIcon, replyIcon, retweetIcon, shareIcon } from '@/components/Icons';
 import React, { useState } from 'react';
 import { useSession } from 'next-auth/react';
-
 import { doc, increment, writeBatch } from '@firebase/firestore';
-
 import { firestore } from '../../firebase';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
+import { useDisabled } from '../../lib/hooks/useDisabled';
 
 function Post(props) {
   const { createdAt, id, postId, name, tag, text, userImage, likes = 0 } = props.post;
@@ -19,6 +18,7 @@ function Post(props) {
   const [realtimePost] = useDocumentData(postRef);
   const [liked, setLiked] = useState<boolean>(false);
   const [countLikes, setCountLikes] = useState<number>(realtimePost?.likes || likes);
+  const { getDisabledProps } = useDisabled();
 
   const likePostHandler = async () => {
     const batch = writeBatch(firestore);
@@ -88,17 +88,16 @@ function Post(props) {
               <div className="text-[#6E767D] text-xs ml-[3px] min-w-[30px] text-center">40</div>
             </div>
             <div className="flex items-center">
-              <div
-                role="button"
-                aria-label="like post"
-                tabIndex={0}
-                onKeyDown={likePostHandler}
-                onClick={likePostHandler}
-                className="relative h-full "
+              <button
+                {...getDisabledProps({
+                  onClick: likePostHandler,
+                  'aria-label': 'custom-button',
+                  className: 'relative h-full ',
+                })}
               >
                 {likeIcon}
                 <span className="icon" />
-              </div>
+              </button>
               <div className="text-[#6E767D] text-xs ml-[3px] min-w-[30px] text-center">
                 {countLikes}
               </div>
