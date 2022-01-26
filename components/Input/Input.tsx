@@ -60,6 +60,7 @@ function Input() {
       name: user.name,
       tag: user.tag,
       text: inputValue,
+      likes: 0,
       createdAt: Timestamp.now(),
       updatedAt: Timestamp.now(),
     });
