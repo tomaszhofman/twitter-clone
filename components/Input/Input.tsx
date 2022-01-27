@@ -8,17 +8,17 @@ import { getDownloadURL, ref, uploadString } from '@firebase/storage';
 import { useSession } from 'next-auth/react';
 import { emojiIcon, gifIcon, mediaIcon, surveyIcon } from '@/components/Icons';
 
-type ImageDimensions = {
-  width: number;
-  height: number;
-};
+// type ImageDimensions = {
+//   width: number;
+//   height: number;
+// };
 
 function Input() {
   const { data: { user } = { user: null } } = useSession();
   const [inputValue, setInputValue] = useState('');
   const [selectImage, setSelectImage] = useState<string | ArrayBuffer>('');
   const [showEmoji, setShowEmoji] = useState(false);
-  const [imageDimensions, setImageDimensions] = useState<ImageDimensions>({ height: 0, width: 0 });
+  // const [imageDimensions, setImageDimensions] = useState<ImageDimensions>({ height: 0, width: 0 });
   const filePickerRef = useRef(null);
   const imageRef = useRef(null);
 
@@ -26,12 +26,12 @@ function Input() {
     setInputValue(e.target.value);
   };
 
-  const onImgLoadHandler = () => {
-    setImageDimensions({
-      height: imageRef.current.height,
-      width: imageRef.current.width,
-    });
-  };
+  // const onImgLoadHandler = () => {
+  //   setImageDimensions({
+  //     height: imageRef.current.height,
+  //     width: imageRef.current.width,
+  //   });
+  // };
 
   const addImageToPostHandler = (e: ChangeEvent<HTMLInputElement> & { files: FileList }) => {
     const [file] = Array.from(e.target.files);
@@ -98,7 +98,7 @@ function Input() {
         {Boolean(selectImage) && (
           <div className="relative">
             <div
-              className={`h-[${imageDimensions.height}px] max-w-full
+              className={`h-min max-w-full
              object-contain`}
             >
               <img
@@ -106,7 +106,7 @@ function Input() {
                 className="rounded-2xl h-full w-full"
                 alt={''}
                 ref={imageRef}
-                onLoad={onImgLoadHandler}
+                // onLoad={onImgLoadHandler}
               />
             </div>
           </div>

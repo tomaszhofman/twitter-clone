@@ -327,7 +327,7 @@ const likeIcon = createIcon(
 export const LikeIconAnimation = memo(({ check }: { check: boolean; isLiked: boolean }) => {
   return (
     <label className="w-[18.75px] h-[18.75px] flex items-center ">
-      <input checked={check} type="checkbox" className="hidden peer" />
+      <input readOnly checked={check} type="checkbox" className="hidden peer" />
       <span className=" peer-checked:hidden">{likeIcon}</span>
       <div
         className={`hidden peer-checked:inline hart-start-position  peer-checked:hart-checked  peer-checked:animate-faveLikeBtnSvg min-w-[50px] min-h-[50px] 
