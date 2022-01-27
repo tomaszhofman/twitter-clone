@@ -1,7 +1,6 @@
-import Image from 'next/image';
 import { timeFromNowFormater } from '../../lib/timeFromNowFormater';
 import { LikeIconAnimation, replyIcon, retweetIcon, shareIcon } from '@/components/Icons';
-import React, { useState } from 'react';
+import React from 'react';
 import { useSession } from 'next-auth/react';
 import { doc, increment, writeBatch } from '@firebase/firestore';
 import { firestore } from '../../firebase';
@@ -10,38 +9,35 @@ import { Button } from '@/components/Button';
 import { useDisabled } from '../../lib/hooks/useDisabled';
 
 function Post(props) {
-  const { createdAt, id, postId, name, tag, text, userImage, likes = 0 } = props.post;
-
-  const postsLikesRef = doc(firestore, 'posts', postId, 'likes', id);
-  const postRef = doc(firestore, 'posts', postId);
-
-  const { data: { user } = { user: null } } = useSession();
-  const [realtimePost] = useDocumentData(postRef);
-  const [isPostAlreadyLiked] = useDocumentData(postsLikesRef);
-  const [liked, setLiked] = useState<boolean>(false);
-  const [countLikes, setCountLikes] = useState<number>(realtimePost?.likes || likes);
+  const { createdAt, id, postId, name, tag, text, userImage } = props.post;
+  const { data } = useSession();
+  const { id: userId } = data?.user || {};
   const { getDisabledProps } = useDisabled();
+  const currentUserLikesRef = doc(firestore, 'posts', postId, 'likes', userId || id);
+  const postRef = doc(firestore, 'posts', postId);
+  const [realtimePost] = useDocumentData(postRef);
+  const [realTimePostLikes] = useDocumentData(currentUserLikesRef);
+
+  const postLikes = realtimePost || props.post;
+  const isPostLikedByUser = realTimePostLikes?.username?.localeCompare(userId) === 0;
 
   const likePostHandler = async () => {
     const batch = writeBatch(firestore);
 
-    if ((liked || isPostAlreadyLiked?.username) && likes > 0) {
-      batch.delete(postsLikesRef);
+    if (isPostLikedByUser && postLikes.likes > 0) {
+      batch.delete(currentUserLikesRef);
       batch.update(postRef, {
         likes: increment(-1),
       });
-      setCountLikes((prevState) => prevState - 1);
     } else {
-      batch.set(postsLikesRef, {
-        username: user.id,
+      batch.set(currentUserLikesRef, {
+        username: userId,
       });
       batch.update(postRef, {
         likes: increment(1),
       });
-      setCountLikes((prevState) => prevState + 1);
     }
     await batch.commit();
-    setLiked(!liked);
   };
 
   return (
@@ -52,13 +48,7 @@ function Post(props) {
       <div className="flex items-start w-full h-full">
         <div className="mr-2">
           <div className="relative h-[3.063rem] w-[3.063rem]">
-            <Image
-              src={userImage}
-              layout="fill"
-              objectFit="cover"
-              className="absolute rounded-full "
-              alt={name}
-            />
+            <img src={userImage} className="absolute rounded-full " alt={name} />
           </div>
         </div>
         <div className="flex pb-[10px] flex-col  w-full">
@@ -95,13 +85,10 @@ function Post(props) {
                   onClick: likePostHandler,
                 })}
               >
-                <LikeIconAnimation
-                  check={countLikes && isPostAlreadyLiked?.username}
-                  isLiked={Boolean(isPostAlreadyLiked?.username)}
-                />
+                <LikeIconAnimation check={isPostLikedByUser} isLiked={isPostLikedByUser} />
               </Button>
               <div className="text-[#6E767D] text-xs ml-[3px] min-w-[30px] text-center">
-                {countLikes !== 0 && countLikes}
+                {postLikes.likes !== 0 && postLikes.likes}
               </div>
             </div>
             <div className="flex items-center">

@@ -21,4 +21,5 @@ export default NextAuth({
       return twitterSession;
     },
   },
+  secret: process.env.SECRET || '123',
 });

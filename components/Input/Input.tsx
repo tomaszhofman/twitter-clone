@@ -5,8 +5,8 @@ import 'emoji-mart/css/emoji-mart.css';
 import { addDoc, collection, doc, updateDoc, Timestamp } from '@firebase/firestore';
 import { firestore, storage } from '../../firebase';
 import { getDownloadURL, ref, uploadString } from '@firebase/storage';
-import { useSession } from 'next-auth/react';
 import { emojiIcon, gifIcon, mediaIcon, surveyIcon } from '@/components/Icons';
+import { useSession } from 'next-auth/react';
 
 // type ImageDimensions = {
 //   width: number;
@@ -14,13 +14,15 @@ import { emojiIcon, gifIcon, mediaIcon, surveyIcon } from '@/components/Icons';
 // };
 
 function Input() {
-  const { data: { user } = { user: null } } = useSession();
+  const { data } = useSession();
   const [inputValue, setInputValue] = useState('');
   const [selectImage, setSelectImage] = useState<string | ArrayBuffer>('');
   const [showEmoji, setShowEmoji] = useState(false);
   // const [imageDimensions, setImageDimensions] = useState<ImageDimensions>({ height: 0, width: 0 });
   const filePickerRef = useRef(null);
   const imageRef = useRef(null);
+
+  const { user } = data || {};
 
   const onChangeHandler = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setInputValue(e.target.value);
@@ -162,6 +164,9 @@ function Input() {
                   borderRadius: '20px',
                 }}
                 theme="dark"
+                backgroundImageFn={(set, sheetSize) =>
+                  `https://unpkg.com/emoji-datasource-apple@6.0.1/img/${set}/sheets-256/${sheetSize}.png`
+                }
               />
             )}
           </div>

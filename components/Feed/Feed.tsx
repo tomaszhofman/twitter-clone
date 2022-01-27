@@ -1,9 +1,15 @@
 import React from 'react';
 import { Header } from '@/components/Header';
-import { Input } from '@/components/Input';
 import { Posts } from '@/components/Posts';
 import firebase from 'firebase/compat';
 import DocumentData = firebase.firestore.DocumentData;
+import dynamic from 'next/dynamic';
+
+const Input = dynamic<{}>(() => import('@/components/Input').then((mod) => mod.Input));
+
+export type Props = {
+  posts: DocumentData[];
+};
 
 function Feed({ posts }: Props) {
   return (
@@ -16,7 +22,3 @@ function Feed({ posts }: Props) {
 }
 
 export { Feed };
-
-type Props = {
-  posts: DocumentData[];
-};

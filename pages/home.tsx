@@ -1,12 +1,18 @@
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { getSession } from 'next-auth/react';
 import Head from 'next/head';
-import { Sidebar } from '@/components/Sidebar';
-import { Feed } from '@/components/Feed';
 import { collectionGroup, getDocs, limit, orderBy, query } from '@firebase/firestore';
 import { firestore } from '../firebase';
 import { postToJSON } from '../lib/postToJSON';
 import { useCollection } from 'react-firebase-hooks/firestore';
+import dynamic from 'next/dynamic';
+import { Props } from '@/components/Feed';
+import { SidebarProps } from '@/components/Sidebar';
+
+const Feed = dynamic<Props>(() => import('@/components/Feed').then((mod) => mod.Feed));
+const Sidebar = dynamic<SidebarProps>(() =>
+  import('@/components/Sidebar').then((mod) => mod.Sidebar),
+);
 
 const collectionRef = collectionGroup(firestore, 'posts');
 const postsQuery = query(collectionRef, orderBy('createdAt', 'desc'), limit(8));
@@ -25,7 +31,7 @@ const Home = (props: InferGetServerSidePropsType<typeof getServerSideProps>) => 
       </Head>
 
       <main className="flex bg-black min-h-screen mx-auto my-0 max-w-screen-xl ">
-        <Sidebar profileDetails={props.profile} />
+        <Sidebar profile={props.profile} />
         <Feed posts={posts} />
         {/*<Modal/>*/}
       </main>

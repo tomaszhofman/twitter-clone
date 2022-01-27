@@ -19,12 +19,19 @@ import {
   profileIconOutline,
   profileIconSolid,
 } from '@/components/Icons';
+import { InferGetServerSidePropsType } from 'next';
+import { getServerSideProps } from '../../pages/home';
+import React from 'react';
 
 type NavMenu = {
   text: string;
   icon: React.ReactNode;
   activeIcon?: React.ReactNode;
   href: string;
+};
+
+export type SidebarProps = Omit<InferGetServerSidePropsType<typeof getServerSideProps>, 'posts'> & {
+  children?: React.ReactNode;
 };
 
 export const NAV_MENU: Array<NavMenu> = [
@@ -77,9 +84,9 @@ export const NAV_MENU: Array<NavMenu> = [
   },
 ];
 
-function Sidebar({ profileDetails }) {
+function Sidebar({ profile }: SidebarProps) {
   const router = useRouter();
-  const { username, tag } = profileDetails;
+  const { username, tag } = profile;
 
   return (
     <div className="hidden sm:flex min-w-[88px] xl:w-[275px] border-r border-[#2F3336] ">
