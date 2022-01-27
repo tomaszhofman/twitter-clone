@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import React, { memo } from 'react';
 
 export enum IconTypesEnum {
   Home = 'home',
@@ -323,6 +323,24 @@ const likeIcon = createIcon(
     height: 18.75,
   },
 );
+
+export const LikeIconAnimation = memo(({ check }: { check: boolean; isLiked: boolean }) => {
+  return (
+    <label className="w-[18.75px] h-[18.75px] flex items-center ">
+      <input checked={check} type="checkbox" className="hidden peer" />
+      <span className=" peer-checked:hidden">{likeIcon}</span>
+      <div
+        className={`hidden peer-checked:inline hart-start-position  peer-checked:hart-checked  peer-checked:animate-faveLikeBtnSvg min-w-[50px] min-h-[50px] 
+        cursor-pointer back bg-[url('https://res.cloudinary.com/dpa2vabjt/image/upload/v1643204839/hearts_vuampn.png')]
+         absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-no-repeat bg-cover  transition-all   `}
+      />
+      <span className="icon" />
+    </label>
+  );
+});
+
+LikeIconAnimation.displayName = 'LikeIconAnimation';
+
 const shareIcon = createIcon(
   <>
     <path

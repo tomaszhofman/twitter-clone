@@ -2,6 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+  .hart-checked {
+    transition: all 1s steps(28);
+    background-position: -1400px 0;
+  }
+
+  .hart-start-position {
+    background-position: 0 0;
+  }
+}
+
 @layer base {
   body {
     @apply bg-black;

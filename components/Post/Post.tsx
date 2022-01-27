@@ -1,11 +1,12 @@
 import Image from 'next/image';
 import { timeFromNowFormater } from '../../lib/timeFromNowFormater';
-import { likeIcon, replyIcon, retweetIcon, shareIcon } from '@/components/Icons';
+import { LikeIconAnimation, replyIcon, retweetIcon, shareIcon } from '@/components/Icons';
 import React, { useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { doc, increment, writeBatch } from '@firebase/firestore';
 import { firestore } from '../../firebase';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
+import { Button } from '@/components/Button';
 import { useDisabled } from '../../lib/hooks/useDisabled';
 
 function Post(props) {
@@ -16,17 +17,15 @@ function Post(props) {
 
   const { data: { user } = { user: null } } = useSession();
   const [realtimePost] = useDocumentData(postRef);
+  const [isPostAlreadyLiked] = useDocumentData(postsLikesRef);
   const [liked, setLiked] = useState<boolean>(false);
   const [countLikes, setCountLikes] = useState<number>(realtimePost?.likes || likes);
   const { getDisabledProps } = useDisabled();
 
   const likePostHandler = async () => {
     const batch = writeBatch(firestore);
-    // await setDoc(postsLikesRef, {
-    //   username: user.id,
-    // });
 
-    if (liked) {
+    if ((liked || isPostAlreadyLiked?.username) && likes > 0) {
       batch.delete(postsLikesRef);
       batch.update(postRef, {
         likes: increment(-1),
@@ -88,18 +87,21 @@ function Post(props) {
               <div className="text-[#6E767D] text-xs ml-[3px] min-w-[30px] text-center">40</div>
             </div>
             <div className="flex items-center">
-              <button
+              <Button<React.ReactNode>
+                ariaLabel={'custom-button'}
+                className="relative h-full "
+                size={'icon'}
                 {...getDisabledProps({
                   onClick: likePostHandler,
-                  'aria-label': 'custom-button',
-                  className: 'relative h-full ',
                 })}
               >
-                {likeIcon}
-                <span className="icon" />
-              </button>
+                <LikeIconAnimation
+                  check={countLikes && isPostAlreadyLiked?.username}
+                  isLiked={Boolean(isPostAlreadyLiked?.username)}
+                />
+              </Button>
               <div className="text-[#6E767D] text-xs ml-[3px] min-w-[30px] text-center">
-                {countLikes}
+                {countLikes !== 0 && countLikes}
               </div>
             </div>
             <div className="flex items-center">

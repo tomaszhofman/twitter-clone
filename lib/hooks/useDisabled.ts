@@ -21,18 +21,13 @@ function useDisabled() {
 
   function getDisabledProps<Props>({
     onClick,
-    onKeyDown,
     ...props
   }: {
-    onKeyDown?: React.DOMAttributes<HTMLButtonElement>['onKeyDown'] & Props;
     onClick?: React.DOMAttributes<HTMLButtonElement>['onClick'] & Props;
-    [x: string]: Props;
   }) {
     return {
-      tabIndex: 0,
-      'aria-disabled': disabled,
       onClick: callAll(onClick, disableButton),
-      disabled,
+      disabled: disabled,
       ...props,
     };
   }
