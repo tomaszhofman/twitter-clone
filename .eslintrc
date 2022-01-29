@@ -31,7 +31,14 @@
   "rules": {
     "import/no-unresolved": "error",
     "@next/next/no-img-element": "off",
-    "no-console": "error"
+    "no-console": "error",
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": [
+      "warn",
+      {
+        "additionalHooks": "(useRecoilCallback|useRecoilTransaction_UNSTABLE)"
+      }
+    ]
   },
   "settings": {
     "import/parsers": {
