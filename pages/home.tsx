@@ -8,6 +8,7 @@ import { useCollection } from 'react-firebase-hooks/firestore';
 import dynamic from 'next/dynamic';
 import { Props } from '@/components/Feed';
 import { SidebarProps } from '@/components/Sidebar';
+import { Modal, ModalContentBase, ModalOpenButton } from '@/components/Modal';
 
 const Feed = dynamic<Props>(() => import('@/components/Feed').then((mod) => mod.Feed));
 const Sidebar = dynamic<SidebarProps>(() =>
@@ -34,6 +35,15 @@ const Home = (props: InferGetServerSidePropsType<typeof getServerSideProps>) => 
         <Sidebar profile={props.profile} />
         <Feed posts={posts} />
         {/*<Modal/>*/}
+
+        <Modal>
+          <ModalOpenButton>
+            <button className="text-white">close</button>
+          </ModalOpenButton>
+          <ModalContentBase>
+            <div>This is modal test</div>
+          </ModalContentBase>
+        </Modal>
       </main>
     </div>
   );
