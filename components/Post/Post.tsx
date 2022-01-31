@@ -1,12 +1,45 @@
 import { timeFromNowFormater } from '../../lib/timeFromNowFormater';
 import { LikeIconAnimation, replyIcon, retweetIcon, shareIcon } from '@/components/Icons';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useSession } from 'next-auth/react';
-import { doc, increment, writeBatch } from '@firebase/firestore';
+import { collection, doc, increment, writeBatch } from '@firebase/firestore';
 import { firestore } from '../../firebase';
-import { useDocumentData } from 'react-firebase-hooks/firestore';
+import { useCollectionData, useDocumentData } from 'react-firebase-hooks/firestore';
 import { Button } from '@/components/Button';
 import { useDisabled } from '../../lib/hooks/useDisabled';
+import { useRouter } from 'next/router';
+import { useRecoilState } from 'recoil';
+import { currentPostIdAtom } from '../../lib/atoms/currentPostIdAtom';
+
+export const useToggleRouterQuery = (name: string) => {
+  const { query } = useRouter();
+
+  const off = useMemo(() => {
+    const newQuery = {
+      ...query,
+    };
+    delete newQuery[name];
+    return {
+      newQuery,
+    };
+  }, [name, query]);
+
+  const on = useMemo(() => {
+    const newQuery = {
+      ...query,
+      [name]: 'tweet',
+    };
+    return {
+      newQuery,
+    };
+  }, [name, query]);
+
+  return {
+    off,
+    on,
+    isOn: query[name] === 'tweet',
+  };
+};
 
 function Post(props) {
   const { createdAt, id, postId, name, tag, text, userImage } = props.post;
@@ -15,11 +48,15 @@ function Post(props) {
   const { getDisabledProps } = useDisabled();
   const currentUserLikesRef = doc(firestore, 'posts', postId, 'likes', userId || id);
   const postRef = doc(firestore, 'posts', postId);
+  const commentsRef = collection(firestore, 'posts', postId, 'comments');
   const [realtimePost] = useDocumentData(postRef);
+  const [realtimeComments] = useCollectionData(commentsRef);
   const [realTimePostLikes] = useDocumentData(currentUserLikesRef);
+  const [, setPostId] = useRecoilState(currentPostIdAtom);
 
-  // const router = useRouter();
+  const router = useRouter();
 
+  const postComments = (realtimeComments && realtimeComments.length) || 0;
   const postLikes = realtimePost || props.post;
   const isPostLikedByUser = realTimePostLikes?.username?.localeCompare(userId) === 0;
 
@@ -42,18 +79,23 @@ function Post(props) {
     await batch.commit();
   };
 
-  // const commentTweetHandler = () => {
-  //   router.push(
-  //     {
-  //       pathname: router.pathname,
-  //       query: {
-  //         postId,
-  //       },
-  //     },
-  //     'home',
-  //     { shallow: true },
-  //   );
-  // };
+  const openModal = async () => {
+    await router.push(
+      {
+        pathname: router.pathname,
+        query: {
+          compose: 'tweet',
+        },
+      },
+      undefined,
+      { shallow: true },
+    );
+  };
+
+  const addCommentHandler = async () => {
+    await openModal();
+    setPostId(postId);
+  };
 
   return (
     <div
@@ -78,11 +120,14 @@ function Post(props) {
           </div>
           <div className="flex w-full items-center justify-between mt-2">
             <div className="flex items-center">
-              <div className="relative h-full ">
+              {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */}
+              <div onClick={addCommentHandler} className="relative h-full ">
                 {replyIcon}
                 <span className="icon" />
               </div>
-              <div className="text-[#6E767D] text-xs ml-[3px] min-w-[30px] text-center">40</div>
+              <div className="text-[#6E767D] text-xs ml-[3px] min-w-[30px] text-center">
+                {postComments !== 0 && postComments}
+              </div>
             </div>
 
             <div className="flex items-center">

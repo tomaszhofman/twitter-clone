@@ -1,71 +1,73 @@
-import { useRecoilState } from 'recoil';
-import { modalState } from '../lib/atoms/modalAtom';
-import { callAll } from '../lib/callAll';
-import { cloneElement, ComponentProps, isValidElement, useEffect } from 'react';
-import ReactModal from 'react-modal';
+import { forwardRef, Ref } from 'react';
+import * as DialogPrimitive from '@radix-ui/react-dialog';
+import { useRouter } from 'next/router';
+import { useToggleRouterQuery } from '@/components/Post';
 
-const modalStyles = {
-  overlay: {
-    backgroundColor: 'rgba(0, 0, 0, 0.4)',
-  },
-  content: {
-    top: '15%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    maxWidth: '600px',
-    maxHeight: '300px',
-    borderRadius: '16px',
-  },
-};
+export type ModalBaseProps = React.ComponentProps<typeof DialogPrimitive['Root']>;
 
-function Modal({ children }: { children: React.ReactNode }) {
-  return <div>{children}</div>;
-}
+// function ModalOpenButton({ children: child }: { children: React.ReactNode }) {
+//   const [, setIsOpen] = useRecoilState(modalState);
+//
+//   if (isValidElement(child)) {
+//     return cloneElement(child, {
+//       onClick: callAll(() => setIsOpen(true), child.props.onClick),
+//     });
+//   }
+// }
 
-function ModalOnInitialOpen({ query }) {
-  const [, setIsOpen] = useRecoilState(modalState);
+// function ModalCloseButton({ children: child }: { children: React.ReactNode }) {
+//   const [, setIsOpen] = useRecoilState(modalState);
+//
+//   if (isValidElement(child)) {
+//     return cloneElement(child, {
+//       onClick: callAll(() => setIsOpen(false), child.props.onClick),
+//     });
+//   }
+// }
 
-  useEffect(() => {
-    setIsOpen((prevState) => !prevState);
-  }, [setIsOpen, query]);
+function Modal(props: ModalBaseProps) {
+  const modalState = useToggleRouterQuery('compose');
+  const { children, onOpenChange, open, ...restProps } = props;
+  const router = useRouter();
 
-  return null;
-}
-
-function ModalOpenButton({ children: child }: { children: React.ReactNode }) {
-  const [, setIsOpen] = useRecoilState(modalState);
-
-  if (isValidElement(child)) {
-    return cloneElement(child, {
-      onClick: callAll(() => setIsOpen(true), child.props.onClick),
-    });
+  async function closeModal(isOpen) {
+    if (!isOpen) {
+      await router.replace({
+        pathname: router.pathname,
+        query: { id: router.query.id || undefined },
+      });
+    }
   }
-}
 
-function ModalCloseButton({ children: child }: { children: React.ReactNode }) {
-  const [, setIsOpen] = useRecoilState(modalState);
-
-  if (isValidElement(child)) {
-    return cloneElement(child, {
-      onClick: callAll(() => setIsOpen(false), child.props.onClick),
-    });
-  }
-}
-
-function ModalContentBase(
-  props: Omit<ComponentProps<typeof ReactModal>, 'isOpen' | 'onRequestClose'>,
-) {
-  const [open, setIsOpen] = useRecoilState(modalState);
   return (
-    <ReactModal
-      style={modalStyles}
-      isOpen={open}
-      onRequestClose={() => setIsOpen(false)}
-      contentLabel="Compose tweet modal"
-      ariaHideApp={false}
-      {...props}
-    />
+    <DialogPrimitive.Root
+      onOpenChange={Boolean(onOpenChange) ? onOpenChange : closeModal}
+      open={open ? open : modalState.isOn}
+      {...restProps}
+    >
+      <DialogPrimitive.Portal>
+        <DialogPrimitive.Overlay className={'z-9 fixed inset-0 bg-gray-500 bg-opacity-75 '} />
+        {children}
+      </DialogPrimitive.Portal>
+    </DialogPrimitive.Root>
   );
 }
 
-export { Modal, ModalOpenButton, ModalContentBase, ModalOnInitialOpen, ModalCloseButton };
+// eslint-disable-next-line @typescript-eslint/naming-convention
+const _ModalContent = ({ children, ...props }: DialogContentProps, ref: Ref<HTMLDivElement>) => (
+  <DialogPrimitive.Content
+    ref={ref}
+    {...props}
+    className=" z-10 min-w-[360px] fixed left-1/2 top-1/2 p-6 text-left bg-white rounded shadow-xl -translate-x-1/2 -translate-y-1/2 sm:align-middle sm:w-full sm:max-w-lg"
+  >
+    {children}
+  </DialogPrimitive.Content>
+);
+
+type DialogContentProps = React.ComponentProps<typeof DialogPrimitive['Content']>;
+
+const ModalContent = forwardRef<HTMLDivElement, DialogContentProps>(
+  _ModalContent,
+) as typeof _ModalContent;
+
+export { Modal, ModalContent };

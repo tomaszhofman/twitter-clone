@@ -7,7 +7,6 @@ import { firestore, storage } from '../../firebase';
 import { getDownloadURL, ref, uploadString } from '@firebase/storage';
 import { emojiIcon, gifIcon, mediaIcon, surveyIcon } from '@/components/Icons';
 import { useSession } from 'next-auth/react';
-import { DataForHandler } from '@/components/compose';
 
 // type ImageDimensions = {
 //   width: number;
@@ -15,10 +14,11 @@ import { DataForHandler } from '@/components/compose';
 // };
 
 export type InputProps = {
-  onUpdatePost?: (data: DataForHandler) => void;
+  commentMode?: boolean;
+  postToUpdate: any;
 };
 
-function Input({ onUpdatePost }: InputProps) {
+function Input({ commentMode = false, postToUpdate }: InputProps) {
   const { data } = useSession();
   const [inputValue, setInputValue] = useState('');
   const [selectImage, setSelectImage] = useState<string | ArrayBuffer>('');
@@ -28,7 +28,6 @@ function Input({ onUpdatePost }: InputProps) {
   const imageRef = useRef(null);
 
   const { user } = data || {};
-  const canUpdatePost = Boolean(onUpdatePost);
 
   const onChangeHandler = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setInputValue(e.target.value);
@@ -61,29 +60,25 @@ function Input({ onUpdatePost }: InputProps) {
 
   //API HANDLERS
   const sendPostHandler = async () => {
-    if (canUpdatePost) {
-      const dataForHandler = {
-        inputValue,
-      };
-      onUpdatePost(dataForHandler);
-    } else {
-      const postsRef = collection(firestore, 'posts');
-      const collectionSnap = await addDoc(postsRef, {
-        id: user.id,
-        userImage: user.image,
-        name: user.name,
-        tag: user.tag,
-        text: inputValue,
-        likes: 0,
-        createdAt: Timestamp.now(),
-        updatedAt: Timestamp.now(),
-      });
-      const storageImageRef = ref(storage, `posts/${collectionSnap.id}/image`);
-      if (selectImage) {
-        await uploadString(storageImageRef, String(selectImage), 'data_url');
-        const downloadedUrl = await getDownloadURL(storageImageRef);
-        await updateDoc(doc(firestore, 'posts', collectionSnap.id), { image: downloadedUrl });
-      }
+    const postIdRef =
+      commentMode && collection(firestore, 'posts', postToUpdate?.postId, 'comments');
+    const postsRef = collection(firestore, 'posts');
+
+    const collectionSnap = await addDoc(commentMode ? postIdRef : postsRef, {
+      id: user.id,
+      userImage: user.image,
+      name: user.name,
+      tag: user.tag,
+      text: inputValue,
+      likes: 0,
+      createdAt: Timestamp.now(),
+      updatedAt: Timestamp.now(),
+    });
+    const storageImageRef = ref(storage, `posts/${collectionSnap.id}/image`);
+    if (selectImage) {
+      await uploadString(storageImageRef, String(selectImage), 'data_url');
+      const downloadedUrl = await getDownloadURL(storageImageRef);
+      await updateDoc(doc(firestore, 'posts', collectionSnap.id), { image: downloadedUrl });
     }
   };
 
