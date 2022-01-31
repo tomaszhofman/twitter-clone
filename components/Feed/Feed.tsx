@@ -4,8 +4,9 @@ import { Posts } from '@/components/Posts';
 import firebase from 'firebase/compat';
 import DocumentData = firebase.firestore.DocumentData;
 import dynamic from 'next/dynamic';
+import { InputProps } from '@/components/Input';
 
-const Input = dynamic<{}>(() => import('@/components/Input').then((mod) => mod.Input));
+const Input = dynamic<InputProps>(() => import('@/components/Input').then((mod) => mod.Input));
 
 export type Props = {
   posts: DocumentData[];

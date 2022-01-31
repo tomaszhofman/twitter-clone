@@ -7,13 +7,18 @@ import { firestore, storage } from '../../firebase';
 import { getDownloadURL, ref, uploadString } from '@firebase/storage';
 import { emojiIcon, gifIcon, mediaIcon, surveyIcon } from '@/components/Icons';
 import { useSession } from 'next-auth/react';
+import { DataForHandler } from '@/components/compose';
 
 // type ImageDimensions = {
 //   width: number;
 //   height: number;
 // };
 
-function Input() {
+export type InputProps = {
+  onUpdatePost?: (data: DataForHandler) => void;
+};
+
+function Input({ onUpdatePost }: InputProps) {
   const { data } = useSession();
   const [inputValue, setInputValue] = useState('');
   const [selectImage, setSelectImage] = useState<string | ArrayBuffer>('');
@@ -23,6 +28,7 @@ function Input() {
   const imageRef = useRef(null);
 
   const { user } = data || {};
+  const canUpdatePost = Boolean(onUpdatePost);
 
   const onChangeHandler = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setInputValue(e.target.value);
@@ -55,22 +61,29 @@ function Input() {
 
   //API HANDLERS
   const sendPostHandler = async () => {
-    const postsRef = collection(firestore, 'posts');
-    const collectionSnap = await addDoc(postsRef, {
-      id: user.id,
-      userImage: user.image,
-      name: user.name,
-      tag: user.tag,
-      text: inputValue,
-      likes: 0,
-      createdAt: Timestamp.now(),
-      updatedAt: Timestamp.now(),
-    });
-    const storageImageRef = ref(storage, `posts/${collectionSnap.id}/image`);
-    if (selectImage) {
-      await uploadString(storageImageRef, String(selectImage), 'data_url');
-      const downloadedUrl = await getDownloadURL(storageImageRef);
-      await updateDoc(doc(firestore, 'posts', collectionSnap.id), { image: downloadedUrl });
+    if (canUpdatePost) {
+      const dataForHandler = {
+        inputValue,
+      };
+      onUpdatePost(dataForHandler);
+    } else {
+      const postsRef = collection(firestore, 'posts');
+      const collectionSnap = await addDoc(postsRef, {
+        id: user.id,
+        userImage: user.image,
+        name: user.name,
+        tag: user.tag,
+        text: inputValue,
+        likes: 0,
+        createdAt: Timestamp.now(),
+        updatedAt: Timestamp.now(),
+      });
+      const storageImageRef = ref(storage, `posts/${collectionSnap.id}/image`);
+      if (selectImage) {
+        await uploadString(storageImageRef, String(selectImage), 'data_url');
+        const downloadedUrl = await getDownloadURL(storageImageRef);
+        await updateDoc(doc(firestore, 'posts', collectionSnap.id), { image: downloadedUrl });
+      }
     }
   };
 

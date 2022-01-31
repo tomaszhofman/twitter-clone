@@ -18,6 +18,8 @@ function Post(props) {
   const [realtimePost] = useDocumentData(postRef);
   const [realTimePostLikes] = useDocumentData(currentUserLikesRef);
 
+  // const router = useRouter();
+
   const postLikes = realtimePost || props.post;
   const isPostLikedByUser = realTimePostLikes?.username?.localeCompare(userId) === 0;
 
@@ -39,6 +41,19 @@ function Post(props) {
     }
     await batch.commit();
   };
+
+  // const commentTweetHandler = () => {
+  //   router.push(
+  //     {
+  //       pathname: router.pathname,
+  //       query: {
+  //         postId,
+  //       },
+  //     },
+  //     'home',
+  //     { shallow: true },
+  //   );
+  // };
 
   return (
     <div
@@ -69,6 +84,7 @@ function Post(props) {
               </div>
               <div className="text-[#6E767D] text-xs ml-[3px] min-w-[30px] text-center">40</div>
             </div>
+
             <div className="flex items-center">
               <div className="relative h-full ">
                 {retweetIcon}

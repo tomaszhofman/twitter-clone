@@ -8,7 +8,8 @@ import { useCollection } from 'react-firebase-hooks/firestore';
 import dynamic from 'next/dynamic';
 import { Props } from '@/components/Feed';
 import { SidebarProps } from '@/components/Sidebar';
-import { Modal, ModalContentBase, ModalOpenButton } from '@/components/Modal';
+import { useRouter } from 'next/router';
+import { ComposeTweet } from '@/components/compose';
 
 const Feed = dynamic<Props>(() => import('@/components/Feed').then((mod) => mod.Feed));
 const Sidebar = dynamic<SidebarProps>(() =>
@@ -19,6 +20,7 @@ const collectionRef = collectionGroup(firestore, 'posts');
 const postsQuery = query(collectionRef, orderBy('createdAt', 'desc'), limit(8));
 
 const Home = (props: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+  const router = useRouter();
   const [querySnapshot] = useCollection(postsQuery);
   const realtimePosts = querySnapshot?.docs.map(postToJSON);
   const posts = realtimePosts || props.posts;
@@ -36,14 +38,7 @@ const Home = (props: InferGetServerSidePropsType<typeof getServerSideProps>) => 
         <Feed posts={posts} />
         {/*<Modal/>*/}
 
-        <Modal>
-          <ModalOpenButton>
-            <button className="text-white">close</button>
-          </ModalOpenButton>
-          <ModalContentBase>
-            <div>This is modal test</div>
-          </ModalContentBase>
-        </Modal>
+        {router.query.postId && <ComposeTweet posts={posts} />}
       </main>
     </div>
   );
