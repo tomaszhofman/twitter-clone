@@ -12,7 +12,6 @@ function Posts({ posts }: Props) {
   return (
     <div className="">
       {posts.map((post) => (
-        // <Post key={post.postId} post={post} />
         <Tweet key={post.postId} post={post} />
       ))}
     </div>
