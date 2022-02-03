@@ -3,4 +3,4 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 
 extend(relativeTime);
 
-export const timeFromNowFormater = (time: string): string => dayjs(time).fromNow(true);
+export const timeFromNowFormater = (time: number): string => dayjs(time).fromNow(true);
