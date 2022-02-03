@@ -57,7 +57,7 @@ function Post(props) {
   const router = useRouter();
 
   const postComments = (realtimeComments && realtimeComments.length) || 0;
-  const postLikes = realtimePost || props.post;
+  const postLikes = realtimePost || props.post || 0;
   const isPostLikedByUser = realTimePostLikes?.username?.localeCompare(userId) === 0;
 
   const likePostHandler = async () => {

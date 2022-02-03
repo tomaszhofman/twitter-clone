@@ -34,7 +34,6 @@ function Modal(props: ModalBaseProps) {
     if (!isOpen) {
       await router.replace({
         pathname: router.pathname,
-        query: { id: router.query.id || undefined },
       });
     }
   }
