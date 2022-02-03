@@ -1,4 +1,4 @@
-import { Card } from '@/components/Card';
+import { Card } from '@/components/ui/Card/Card';
 import { useSession } from 'next-auth/react';
 import { deleteDoc, doc, increment, writeBatch } from '@firebase/firestore';
 import { firestore } from '../firebase';

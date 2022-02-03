@@ -9,7 +9,9 @@ export type BaseProps<T> = {
   ariaLabel: string;
 };
 
-function Button<T>(props: BaseProps<T> & Omit<JSX.IntrinsicElements['button'], 'ref'>) {
+export type ButtonProps<T> = BaseProps<T> & Omit<JSX.IntrinsicElements['button'], 'ref'>;
+
+function Button<T>(props: ButtonProps<T>) {
   const { disabled, size, children, className, onClick, ariaLabel } = props;
 
   return (

@@ -1,7 +1,7 @@
 import { forwardRef, Ref } from 'react';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { useRouter } from 'next/router';
-import { useToggleRouterQuery } from '../lib/hooks/useToggleRouterQuery';
+import { useToggleRouterQuery } from '../../lib/hooks/useToggleRouterQuery';
 
 export type ModalBaseProps = React.ComponentProps<typeof DialogPrimitive['Root']>;
 

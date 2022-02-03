@@ -1,4 +1,4 @@
-import { Modal, ModalContent } from '@/components/Modal';
+import { Modal, ModalContent } from '@/components/ui/Modal';
 
 import firebase from 'firebase/compat';
 import { firestore } from '../../firebase';
