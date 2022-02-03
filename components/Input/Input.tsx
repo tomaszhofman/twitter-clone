@@ -71,6 +71,7 @@ function Input({ commentMode = false, postToUpdate }: InputProps) {
       tag: user.tag,
       text: inputValue,
       likes: 0,
+      locale: 'pl',
       createdAt: Timestamp.now(),
       updatedAt: Timestamp.now(),
     });

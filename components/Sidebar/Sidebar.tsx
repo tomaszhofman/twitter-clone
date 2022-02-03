@@ -30,7 +30,10 @@ type NavMenu = {
   href: string;
 };
 
-export type SidebarProps = Omit<InferGetServerSidePropsType<typeof getServerSideProps>, 'posts'> & {
+export type SidebarProps = Omit<
+  InferGetServerSidePropsType<typeof getServerSideProps>,
+  'posts' | '_nextI18Next'
+> & {
   children?: React.ReactNode;
 };
 

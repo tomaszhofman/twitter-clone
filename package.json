@@ -14,7 +14,7 @@
     "@firebase/firestore-types": "^2.5.0",
     "@firebase/storage": "^0.9.1",
     "@radix-ui/react-dialog": "^0.1.5",
-    "@types/react-modal": "^3.13.1",
+    "accept-language-parser": "^1.5.0",
     "dayjs": "^1.10.7",
     "emoji-mart": "^3.0.1",
     "firebase": "^9.6.3",
@@ -28,6 +28,7 @@
   },
   "devDependencies": {
     "@svgr/webpack": "^6.2.0",
+    "@types/accept-language-parser": "^1.5.3",
     "@types/emoji-mart": "^3.0.9",
     "@types/node": "17.0.8",
     "@types/react": "17.0.38",
