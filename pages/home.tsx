@@ -17,9 +17,9 @@ import { useCollection } from 'react-firebase-hooks/firestore';
 import dynamic from 'next/dynamic';
 import { Props } from '@/components/Feed';
 import { SidebarProps } from '@/components/Sidebar';
-import { ComposeTweet } from '@/components/compose';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { getLocaleFromHeaders } from '../lib/getLocaleFromHeaders';
+import { ReplayTweet } from '@/components/ReplyTweet';
 
 const Feed = dynamic<Props>(() => import('@/components/Feed').then((mod) => mod.Feed));
 const Sidebar = dynamic<SidebarProps>(() =>
@@ -30,7 +30,7 @@ const collectionRef = collectionGroup(firestore, 'posts');
 const postsQuery = query(collectionRef, orderBy('createdAt', 'desc'), limit(8));
 
 const Home = (props: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  const [querySnapshot] = useCollection(postsQuery);
+  const [querySnapshot, loading] = useCollection(postsQuery);
   const realtimePosts = querySnapshot?.docs.map(postToJSON);
   const posts = realtimePosts || props.posts;
 
@@ -44,9 +44,11 @@ const Home = (props: InferGetServerSidePropsType<typeof getServerSideProps>) => 
 
       <main className="flex bg-black min-h-screen mx-auto my-0 max-w-screen-xl ">
         <Sidebar profile={props.profile} />
-        <Feed posts={posts} />
 
-        <ComposeTweet posts={posts} />
+        {loading ? 'loading' : <Feed posts={posts} />}
+
+        {/*<AddTweet posts={posts} />*/}
+        <ReplayTweet posts={posts} />
       </main>
     </div>
   );
@@ -60,6 +62,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   const postsDocs = await getDocs(postsQuery);
   const userDocs = await getDoc(userRef);
+
   const userDoc = userDocs.data();
   const posts = postsDocs.docs.map(postToJSON);
 
@@ -82,6 +85,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
           id: session.user.id,
         },
         posts,
+
         ...(await serverSideTranslations(locale, ['common'])),
       },
     };

@@ -23,7 +23,7 @@ const CardFooter = ({
       </div>
 
       <div className="flex items-center">
-        <IconButton ariaLabel="make a retweet" icon={retweetIcon} />
+        <IconButton onClick={onReply} ariaLabel="make a retweet" icon={retweetIcon} />
         <div className="text-[#6E767D] text-xs ml-[3px] min-w-[30px] text-center">40</div>
       </div>
       <div className="flex items-center">

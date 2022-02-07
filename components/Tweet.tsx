@@ -5,12 +5,15 @@ import { firestore } from '../firebase';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
 
 import { useRouter } from 'next/router';
+import { useRecoilState } from 'recoil';
+import { currentPostIdAtom } from '../lib/atoms/currentPostIdAtom';
 
 const Tweet = ({ post }) => {
   const { data: session, status } = useSession();
   const loadingUserSession = status === 'loading';
   const userId = !loadingUserSession && session?.user?.id;
   const router = useRouter();
+  const [, setPostId] = useRecoilState(currentPostIdAtom);
 
   const postLikedByReference = doc(firestore, 'posts', post.postId, 'likes', String(userId));
   const realtimePostReference = doc(firestore, 'posts', post.postId);
@@ -48,6 +51,8 @@ const Tweet = ({ post }) => {
       undefined,
       { shallow: false },
     );
+
+    setPostId(post.postId);
   };
 
   const onLikeHandler = async () => {
