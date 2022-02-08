@@ -18,25 +18,11 @@ const Tweet = ({ post }) => {
   const postLikedByReference = doc(firestore, 'posts', post.postId, 'likes', String(userId));
   const realtimePostReference = doc(firestore, 'posts', post.postId);
 
-  // const repliesReference = collection(firestore, 'replies', post.postId);
-  // await addDoc(repliesReference, {
-  //   id: user,
-  //   userImage: user.image,
-  //   name: user.name,
-  //   tag: user.tag,
-  //   text: inputValue,
-  //   likes: 0,
-  //   locale: 'pl',
-  //   createdAt: Timestamp.now(),
-  //   updatedAt: Timestamp.now(),
-  // });
-
   const [postLikedBy, postLikedByLoading] = useDocumentData(postLikedByReference);
   const [realtimePost, realtimePostLoading] = useDocumentData(realtimePostReference);
 
   const isLikedByCurrentUser =
     !postLikedByLoading && postLikedBy?.username?.localeCompare(session?.user?.id) === 0;
-  const numberOfLikes = 3;
   const postLikes = (!realtimePostLoading && realtimePost?.likes) || post.likes;
   const numberOfReplies = 13;
 
@@ -89,7 +75,7 @@ const Tweet = ({ post }) => {
       onDelete={onDeleteHandler}
       onReply={onReplyHandler}
       isLikedByCurrentUser={isLikedByCurrentUser}
-      numberOfLikes={numberOfLikes}
+      numberOfLikes={postLikes}
       numberOfReplies={numberOfReplies}
     />
   );

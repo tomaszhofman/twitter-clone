@@ -22,6 +22,8 @@ import {
 import { InferGetServerSidePropsType } from 'next';
 import { getServerSideProps } from '../../pages/home';
 import React from 'react';
+import { useSession } from 'next-auth/react';
+import { Avatar } from '@/components/Avatar';
 
 type NavMenu = {
   text: string;
@@ -87,9 +89,12 @@ export const NAV_MENU: Array<NavMenu> = [
   },
 ];
 
-function Sidebar({ profile }: SidebarProps) {
+function Sidebar() {
   const router = useRouter();
-  const { username, tag } = profile;
+
+  const { data: session, status } = useSession();
+
+  const loading = status === 'loading';
 
   return (
     <div className="hidden sm:flex min-w-[88px] xl:w-[275px] border-r border-[#2F3336] ">
@@ -114,24 +119,19 @@ function Sidebar({ profile }: SidebarProps) {
               Tweet
             </button>
           </div>
-
-          <div className="text-white flex items-center justify-between hoverAnimation">
-            <div className="flex items-center">
-              <Image
-                src="https://pbs.twimg.com/profile_images/1467773673058750468/X-7z8YWX_x96.png"
-                alt=""
-                width={40}
-                height={40}
-                className="rounded-full "
-              />
-              <div className="hidden xl:inline leading-5 xl:ml-2.5">
-                <h5 className="font-bold text-base text-[#D9D9D9]">{username}</h5>
-                <p className="text-[#6E767D] font-medium text-sm">@{tag}</p>
+          {!loading && (
+            <div className="text-white flex items-center justify-between hoverAnimation">
+              <div className="flex items-center">
+                <Avatar userImage={session?.user.image} alt={session.user.name} />
+                <div className="hidden xl:inline leading-5 xl:ml-2.5">
+                  <h5 className="font-bold text-base text-[#D9D9D9]">{session.user.name}</h5>
+                  <p className="text-[#6E767D] font-medium text-sm">@{session.user.tag}</p>
+                </div>
               </div>
+              <div className="hidden h-5 xl:inline ml-10 fill-white"></div>
+              <div>{arrowButtonIcon}</div>
             </div>
-            <div className="hidden h-5 xl:inline ml-10 fill-white"></div>
-            {arrowButtonIcon}
-          </div>
+          )}
         </div>
       </div>
     </div>
