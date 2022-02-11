@@ -3,15 +3,15 @@ import { ComposeForm } from '@/components/ComposeForm';
 import React from 'react';
 import { addDoc, collection, doc, Timestamp, updateDoc } from '@firebase/firestore';
 import { getDownloadURL, ref, uploadString } from '@firebase/storage';
-import { useFileUpload } from '../lib/hooks/useFileUpload';
 import { useSession } from 'next-auth/react';
+import { useGlobalFileUpload } from '../lib/context/fileUploadContext';
 
 export type DataForHandler = {
   inputValue: string;
 };
 
 function AddTweet() {
-  const [{ resultFile }] = useFileUpload({ method: 'readAsDataURL' });
+  const [{ resultFile }] = useGlobalFileUpload();
   const { data: session } = useSession();
   const user = session?.user;
 

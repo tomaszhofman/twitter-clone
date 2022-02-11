@@ -10,7 +10,7 @@ const CardFooter = ({
   isLikedByCurrentUser,
   onReply,
   onLike,
-}: Omit<CardProps, 'name' | 'tag' | 'createdAt' | 'text' | 'userImage'>) => {
+}: Omit<CardProps, 'name' | 'tag' | 'createdAt' | 'text' | 'userImage' | 'postId' | 'image'>) => {
   const { getDisabledProps } = useDisabled();
 
   return (

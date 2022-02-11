@@ -41,7 +41,9 @@ const Tweet = ({ post }) => {
     setPostId(post.postId);
   };
 
-  const onLikeHandler = async () => {
+  const onLikeHandler = async (e: Event) => {
+    e.stopPropagation();
+    e.preventDefault();
     const batch = writeBatch(firestore);
 
     if (isLikedByCurrentUser && postLikes > 0) {
@@ -60,7 +62,9 @@ const Tweet = ({ post }) => {
     await batch.commit();
   };
 
-  const onReplyHandler = async () => {
+  const onReplyHandler = async (e: Event) => {
+    e.stopPropagation();
+    e.preventDefault();
     await openModal();
   };
 

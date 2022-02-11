@@ -1,6 +1,7 @@
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { getSession } from 'next-auth/react';
 import {
+  collection,
   collectionGroup,
   doc,
   getDoc,
@@ -10,13 +11,13 @@ import {
   query,
   updateDoc,
 } from '@firebase/firestore';
-import { firestore } from '../firebase';
-import { postToJSON } from '../lib/postToJSON';
+import { firestore } from '../../firebase';
+import { postToJSON } from '../../lib/postToJSON';
 import { useCollection } from 'react-firebase-hooks/firestore';
 import dynamic from 'next/dynamic';
 import { Props } from '@/components/Feed';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { getLocaleFromHeaders } from '../lib/getLocaleFromHeaders';
+import { getLocaleFromHeaders } from '../../lib/getLocaleFromHeaders';
 import { ReplayTweet } from '@/components/ReplyTweet';
 import { Shell } from '@/components/Shell';
 
@@ -31,9 +32,8 @@ const Home = (props: InferGetServerSidePropsType<typeof getServerSideProps>) => 
   const posts = realtimePosts || props.posts;
 
   return (
-    <Shell>
+    <Shell trendingList={props.trendingList}>
       <Feed posts={posts} />
-      {/*<AddTweet posts={posts} />*/}
       <ReplayTweet posts={posts} />
     </Shell>
   );
@@ -43,13 +43,16 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { req } = context;
   const session = await getSession({ req });
 
-  const userRef = doc(firestore, 'users', session.user.id);
+  const userRef = doc(firestore, 'users', session?.user?.id);
+  const trendingRef = collection(firestore, 'trending');
 
   const postsDocs = await getDocs(postsQuery);
   const userDocs = await getDoc(userRef);
+  const trendingDocs = await getDocs(trendingRef);
 
   const userDoc = userDocs.data();
   const posts = postsDocs.docs.map(postToJSON);
+  const trendingList = trendingDocs.docs.map((el) => el.data());
 
   const locale = userDoc.locale || getLocaleFromHeaders(req);
 
@@ -69,8 +72,9 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
           tag: session.user.tag,
           id: session.user.id,
         },
+        session: session,
         posts,
-
+        trendingList,
         ...(await serverSideTranslations(locale, ['common'])),
       },
     };

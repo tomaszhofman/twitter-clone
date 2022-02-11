@@ -1,5 +1,8 @@
 {
   "new_tweet_placeholder": "What's happening?",
+  "tweet_details_title": "Tweet",
+  "trending_title": "Trends for You",
+  "who_to_follow_title": "Who to follow",
   "home_page_heading": "Home",
   "navigation_home": "Home",
   "navigation_explore": "Explore",
@@ -8,5 +11,6 @@
   "navigation_bookmarks": "Bookmarks",
   "navigation_list": "List",
   "navigation_profile": "Profile",
-  "navigation_more": "More"
+  "navigation_more": "More",
+  "show_more": "Show more"
 }

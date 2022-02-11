@@ -91,7 +91,6 @@ export const NAV_MENU: Array<NavMenu> = [
 
 function Sidebar() {
   const router = useRouter();
-
   const { data: session, status } = useSession();
 
   const loading = status === 'loading';
@@ -122,10 +121,10 @@ function Sidebar() {
           {!loading && (
             <div className="text-white flex items-center justify-between hoverAnimation">
               <div className="flex items-center">
-                <Avatar userImage={session?.user.image} alt={session.user.name} />
+                <Avatar userImage={session?.user.image} alt={session?.user.name} />
                 <div className="hidden xl:inline leading-5 xl:ml-2.5">
-                  <h5 className="font-bold text-base text-[#D9D9D9]">{session.user.name}</h5>
-                  <p className="text-[#6E767D] font-medium text-sm">@{session.user.tag}</p>
+                  <h5 className="font-bold text-base text-[#D9D9D9]">{session?.user.name}</h5>
+                  <p className="text-[#6E767D] font-medium text-sm">@{session?.user.tag}</p>
                 </div>
               </div>
               <div className="hidden h-5 xl:inline ml-10 fill-white"></div>

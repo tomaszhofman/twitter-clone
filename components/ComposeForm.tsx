@@ -3,8 +3,8 @@ import React, { useRef, useState } from 'react';
 import { Avatar } from '@/components/Avatar';
 import { useLocale } from '../lib/hooks/useLocale';
 import { emojiIcon, gifIcon, mediaIcon, surveyIcon } from '@/components/Icons';
-import { useFileUpload } from '../lib/hooks/useFileUpload';
 import { AutoHeightTextField } from '@/components/AutoHeightTextField';
+import { useGlobalFileUpload } from '../lib/context/fileUploadContext';
 
 type Props = {
   onSubmit: (data: string) => Promise<void>;
@@ -15,15 +15,16 @@ const ComposeForm = ({ onSubmit }: Props) => {
   const { t } = useLocale();
   const [value, setValue] = useState<string>('');
   const filePickerRef = useRef(null);
-  const [{ resultFile, reset }, setFile] = useFileUpload({ method: 'readAsDataURL' });
+
+  const [{ resultFile, reset }, setFile] = useGlobalFileUpload();
 
   const loading = status === 'loading';
   const user = session?.user;
 
   const onSubmitHandler = async () => {
     await onSubmit(value);
-    reset();
     setValue('');
+    reset();
   };
 
   return (

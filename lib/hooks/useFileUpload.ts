@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useReducer } from 'react';
 
 type ReadAsMethod = 'readAsText' | 'readAsDataURL' | 'readAsArrayBuffer' | 'readAsBinaryString';
 
-type FileReducer = {
+export type FileReducer = {
   file: File | null;
   resultFile: string | ArrayBuffer | null;
 };

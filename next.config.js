@@ -13,7 +13,12 @@ const nextConfig = {
   },
   reactStrictMode: true,
   images: {
-    domains: ['res.cloudinary.com', 'pbs.twimg.com', 'lh3.googleusercontent.com'],
+    domains: [
+      'res.cloudinary.com',
+      'pbs.twimg.com',
+      'lh3.googleusercontent.com',
+      'firebasestorage.googleapis.com',
+    ],
   },
   i18n,
 };
